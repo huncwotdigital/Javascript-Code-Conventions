@@ -1182,6 +1182,22 @@
     this._firstName = 'Panda';
     ```
 
+  - Use a leading underscore `_` when naming private methods. Private methods should exist outside of the scope of object and should be invoked using the call method.
+
+  ```javascript
+  var dog = {
+    _name: 'Spot',
+
+    bark: function(sound) {
+      _bark.call( this, sound );
+    }
+  };
+
+  function _bark(sound) {
+    console.log(this._name + ':' + sound);
+  }
+  ```
+
   - `Boolean` variables should prefixed with is or has.
 
     ```javascript
@@ -1460,7 +1476,7 @@
     + `dom-style`
     + `dom-tree`
     + `dom-event`
-  - Visig [https://github.com/npm-dom](https://github.com/npm-dom) for more info.
+  - Visit [https://github.com/npm-dom](https://github.com/npm-dom) for more info.
 
 **[⬆ back to top](#table-of-contents)**
 
