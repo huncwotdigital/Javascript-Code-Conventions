@@ -26,7 +26,6 @@
   1. [Events](#events)
   1. [Modules](#modules)
   1. [jQuery](#jquery)
-  1. [ECMAScript 5 Compatibility](#ecmascript-5-compatibility)
   1. [Testing](#testing)
   1. [Performance](#performance)
   1. [Resources](#resources)
@@ -1430,113 +1429,35 @@
 
 ## Modules
 
-  - The module should start with a `!`. This ensures that if a malformed module forgets to include a final semicolon there aren't errors in production when the scripts get concatenated. [Explanation](https://github.com/airbnb/javascript/issues/44#issuecomment-13063933)
-  - The file should be named with camelCase, live in a folder with the same name, and match the name of the single export.
-  - Add a method called `noConflict()` that sets the exported module to the previous version and returns this one.
-  - Always declare `'use strict';` at the top of the module.
+  - Modules should be built using the CommonJS pattern
 
     ```javascript
-    // fancyInput/fancyInput.js
+    // Creating a module in ./doSomething.js
+    module.exports = function doSomething() {
 
-    !function(global) {
-      'use strict';
-
-      var previousFancyInput = global.FancyInput;
-
-      function FancyInput(options) {
-        this.options = options || {};
-      }
-
-      FancyInput.noConflict = function noConflict() {
-        global.FancyInput = previousFancyInput;
-        return FancyInput;
-      };
-
-      global.FancyInput = FancyInput;
-    }(this);
+      console.log('BOO YA!');
+    };
     ```
+
+    ```javascript
+    // Consuming module from ./doSomething.js in another file
+    var doSomething = require('./doSomething');
+
+    doSomething();
+    ```
+  - Resuable modules should be distributed on NPM
 
 **[⬆ back to top](#table-of-contents)**
 
 
 ## jQuery
 
-  - Prefix jQuery object variables with a `$`.
-
-    ```javascript
-    // bad
-    var sidebar = $('.sidebar');
-
-    // good
-    var $sidebar = $('.sidebar');
-    ```
-
-  - Cache jQuery lookups.
-
-    ```javascript
-    // bad
-    function setSidebar() {
-      $('.sidebar').hide();
-
-      // ...stuff...
-
-      $('.sidebar').css({
-        'background-color': 'pink'
-      });
-    }
-
-    // good
-    function setSidebar() {
-      var $sidebar = $('.sidebar');
-      $sidebar.hide();
-
-      // ...stuff...
-
-      $sidebar.css({
-        'background-color': 'pink'
-      });
-    }
-    ```
-
-  - For DOM queries use Cascading `$('.sidebar ul')` or parent > child `$('.sidebar > ul')`. [jsPerf](http://jsperf.com/jquery-find-vs-context-sel/16)
-  - Use `find` with scoped jQuery object queries.
-
-    ```javascript
-    // bad
-    $('ul', '.sidebar').hide();
-
-    // bad
-    $('.sidebar').find('ul').hide();
-
-    // good
-    $('.sidebar ul').hide();
-
-    // good
-    $('.sidebar > ul').hide();
-
-    // good
-    $sidebar.find('ul').hide();
-    ```
-
-**[⬆ back to top](#table-of-contents)**
-
-
-## ECMAScript 5 Compatibility
-
-  - Refer to [Kangax](https://twitter.com/kangax/)'s ES5 [compatibility table](http://kangax.github.com/es5-compat-table/).
-
-**[⬆ back to top](#table-of-contents)**
-
-
-## Testing
-
-  - **Yup.**
-
-    ```javascript
-    function() {
-      return true;
-    }
-    ```
+  - You should shy away from using jQuery. Instead use modules off NPM like:
+    + `dom-select`
+    + `dom-style`
+    + `dom-tree`
+    + `dom-event`
+  - Visig [https://github.com/npm-dom](https://github.com/npm-dom) for more info.
 
 **[⬆ back to top](#table-of-contents)**
 
