@@ -1266,10 +1266,14 @@
       return false;
     }
 
+    dragon.age(true);
+
     // good
     if (!dragon.hasAge()) {
       return false;
     }
+
+    drag.setHasAge(true);
     ```
 
   - It's okay to create get() and set() functions, but be consistent.
@@ -1289,6 +1293,21 @@
       return this[key];
     };
     ```
+
+  - Getters and Setters via properties can be used in non processor intensive operations. Should be defined via `Object.defineProperty` on a `prototype`
+
+  ```javascript
+  Object.defineProperty(ObjecCar.prototype, 'speed', {
+    get: function() {
+      return this._speed;
+    },
+
+    set: function(speed) {
+      this._speed = speed;
+    }
+  });
+  ```
+
 
 **[⬆ back to top](#table-of-contents)**
 
