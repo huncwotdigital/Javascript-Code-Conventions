@@ -1108,7 +1108,7 @@
 
 ## Naming Conventions
 
-  - Avoid single letter names. Be descriptive with your naming.
+  - Avoid single letter names and abreviations. Be descriptive with your naming.
 
     ```javascript
     // bad
@@ -1120,6 +1120,12 @@
     function query() {
       // ..stuff..
     }
+
+    // bad
+    var perc = 0;
+
+    // good
+    var percentage = 0;
     ```
 
   - Use camelCase when naming objects, functions, and instances.
@@ -1172,6 +1178,18 @@
 
     // good
     this._firstName = 'Panda';
+    ```
+
+  - `Boolean` variables should prefixed with is or has.
+
+    ```javascript
+    // bad
+    var cat = false;
+    var eggs = true;
+
+    // good
+    var isCat = false;
+    var hasEggs = true;
     ```
 
   - When saving a reference to `this` use `_this`.
