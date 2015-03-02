@@ -1,8 +1,6 @@
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/airbnb/javascript?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+# Jam3 JavaScript Style Guide
 
-# Airbnb JavaScript Style Guide() {
-
-*A mostly reasonable approach to JavaScript*
+*Make It Happen and Don't Fuck It Up*
 
 
 ## Table of Contents
@@ -642,7 +640,7 @@
 
 ## Comments
 
-  - Use `/** ... */` for multiline comments. Include a description, specify types and values for all parameters and return values.
+  - Use `/** ... */` to document public function definitions. Include a description, specify types and values for all parameters and return values.
 
     ```javascript
     // bad
@@ -702,6 +700,27 @@
 
       return type;
     }
+    ```
+  
+  - Use `//` for multiline comments when a single line comment is longer than 80 charachters. Or use `/* .. */`
+
+    ```javascript
+    // bad
+    // this method will return a fantabulous variable that you can use to do lots of calculations with. If you don't know how to use it see the docs at http://someFakeSite.com
+    var fantabulousValue = fantabulous();
+
+    // good
+    // this method will return a fantabulous variable that you can use to do
+    // lots of calculations with. If you don't know how to use it see the docs // at http://someFakeSite.com
+    var fantabulousValue = fantabulous();
+
+    // good
+    /*
+     * this method will return a fantabulous variable that you can use to do
+     * lots of calculations with. If you don't know how to use it see the docs 
+     * at http://someFakeSite.com
+     */
+    var fantabulousValue = fantabulous();
     ```
 
   - Prefixing your comments with `FIXME` or `TODO` helps other developers quickly understand if you're pointing out a problem that needs to be revisited, or if you're suggesting a solution to the problem that needs to be implemented. These are different than regular comments because they are actionable. The actions are `FIXME -- need to figure this out` or `TODO -- need to implement`.
@@ -891,6 +910,22 @@
     return obj;
     ```
 
+ - Magic Numbers and Fancy Stuff should be commented. Magic Numbers are constant values used for calculations. Fancy Stuff are things out of the norm done with good reason.
+
+    ```javascript
+    // Magic Numbers
+    
+    // +10 to move over from border
+    element.style.left = left + 10 + 'px';
+
+  
+    // Fancy Stuff
+
+    // parseInt was the reason my code was slow.
+    // Bitshifting the String to coerce it to a
+    // Number made it a lot faster.
+    var val = '10' >> 0;
+    ```
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -1039,11 +1074,9 @@
 
     ```javascript
     // good
-    /**
-     * parseInt was the reason my code was slow.
-     * Bitshifting the String to coerce it to a
-     * Number made it a lot faster.
-     */
+    // parseInt was the reason my code was slow.
+    // Bitshifting the String to coerce it to a
+    // Number made it a lot faster.
     var val = inputValue >> 0;
     ```
 
