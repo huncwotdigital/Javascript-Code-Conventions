@@ -1095,11 +1095,14 @@
     // bad
     var hasAge = new Boolean(age);
 
+    // bad
+    var hasAge = !!age;
+
     // good
     var hasAge = Boolean(age);
 
     // good
-    var hasAge = !!age;
+    var hasAge = age !== undefined;
     ```
 
 **[⬆ back to top](#table-of-contents)**
