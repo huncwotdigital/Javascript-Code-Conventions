@@ -1,8 +1,6 @@
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/airbnb/javascript?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+# Jam3 JavaScript Style Guide
 
-# Airbnb JavaScript Style Guide() {
-
-*A mostly reasonable approach to JavaScript*
+*Make It Happen and Don't Fuck It Up*
 
 
 ## Table of Contents
@@ -28,7 +26,6 @@
   1. [Events](#events)
   1. [Modules](#modules)
   1. [jQuery](#jquery)
-  1. [ECMAScript 5 Compatibility](#ecmascript-5-compatibility)
   1. [Testing](#testing)
   1. [Performance](#performance)
   1. [Resources](#resources)
@@ -642,7 +639,7 @@
 
 ## Comments
 
-  - Use `/** ... */` for multiline comments. Include a description, specify types and values for all parameters and return values.
+  - Use `/** ... */` to document public function definitions. Include a description, specify types and values for all parameters and return values.
 
     ```javascript
     // bad
@@ -702,6 +699,27 @@
 
       return type;
     }
+    ```
+  
+  - Use `//` for multiline comments when a single line comment is longer than 80 charachters. Or use `/* .. */`
+
+    ```javascript
+    // bad
+    // this method will return a fantabulous variable that you can use to do lots of calculations with. If you don't know how to use it see the docs at http://someFakeSite.com
+    var fantabulousValue = fantabulous();
+
+    // good
+    // this method will return a fantabulous variable that you can use to do
+    // lots of calculations with. If you don't know how to use it see the docs // at http://someFakeSite.com
+    var fantabulousValue = fantabulous();
+
+    // good
+    /*
+     * this method will return a fantabulous variable that you can use to do
+     * lots of calculations with. If you don't know how to use it see the docs 
+     * at http://someFakeSite.com
+     */
+    var fantabulousValue = fantabulous();
     ```
 
   - Prefixing your comments with `FIXME` or `TODO` helps other developers quickly understand if you're pointing out a problem that needs to be revisited, or if you're suggesting a solution to the problem that needs to be implemented. These are different than regular comments because they are actionable. The actions are `FIXME -- need to figure this out` or `TODO -- need to implement`.
@@ -891,6 +909,22 @@
     return obj;
     ```
 
+ - Magic Numbers and Fancy Stuff should be commented. Magic Numbers are constant values used for calculations. Fancy Stuff are things out of the norm done with good reason.
+
+    ```javascript
+    // Magic Numbers
+    
+    // +10 to move over from border
+    element.style.left = left + 10 + 'px';
+
+  
+    // Fancy Stuff
+
+    // parseInt was the reason my code was slow.
+    // Bitshifting the String to coerce it to a
+    // Number made it a lot faster.
+    var val = '10' >> 0;
+    ```
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -1039,11 +1073,9 @@
 
     ```javascript
     // good
-    /**
-     * parseInt was the reason my code was slow.
-     * Bitshifting the String to coerce it to a
-     * Number made it a lot faster.
-     */
+    // parseInt was the reason my code was slow.
+    // Bitshifting the String to coerce it to a
+    // Number made it a lot faster.
     var val = inputValue >> 0;
     ```
 
@@ -1063,11 +1095,14 @@
     // bad
     var hasAge = new Boolean(age);
 
+    // bad
+    var hasAge = !!age;
+
     // good
     var hasAge = Boolean(age);
 
     // good
-    var hasAge = !!age;
+    var hasAge = age !== undefined;
     ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -1075,7 +1110,7 @@
 
 ## Naming Conventions
 
-  - Avoid single letter names. Be descriptive with your naming.
+  - Avoid single letter names and abreviations. Be descriptive with your naming.
 
     ```javascript
     // bad
@@ -1087,6 +1122,12 @@
     function query() {
       // ..stuff..
     }
+
+    // bad
+    var perc = 0;
+
+    // good
+    var percentage = 0;
     ```
 
   - Use camelCase when naming objects, functions, and instances.
@@ -1139,6 +1180,34 @@
 
     // good
     this._firstName = 'Panda';
+    ```
+
+  - Use a leading underscore `_` when naming private methods. Private methods should exist outside of the scope of object and should be invoked using the call method.
+
+  ```javascript
+  var dog = {
+    _name: 'Spot',
+
+    bark: function(sound) {
+      _bark.call( this, sound );
+    }
+  };
+
+  function _bark(sound) {
+    console.log(this._name + ':' + sound);
+  }
+  ```
+
+  - `Boolean` variables should prefixed with is or has.
+
+    ```javascript
+    // bad
+    var cat = false;
+    var eggs = true;
+
+    // good
+    var isCat = false;
+    var hasEggs = true;
     ```
 
   - When saving a reference to `this` use `_this`.
@@ -1215,10 +1284,14 @@
       return false;
     }
 
+    dragon.age(true);
+
     // good
     if (!dragon.hasAge()) {
       return false;
     }
+
+    drag.setHasAge(true);
     ```
 
   - It's okay to create get() and set() functions, but be consistent.
@@ -1238,6 +1311,21 @@
       return this[key];
     };
     ```
+
+  - Getters and Setters via properties can be used in non processor intensive operations. Should be defined via `Object.defineProperty` on a `prototype`
+
+  ```javascript
+  Object.defineProperty(ObjecCar.prototype, 'speed', {
+    get: function() {
+      return this._speed;
+    },
+
+    set: function(speed) {
+      this._speed = speed;
+    }
+  });
+  ```
+
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -1360,113 +1448,35 @@
 
 ## Modules
 
-  - The module should start with a `!`. This ensures that if a malformed module forgets to include a final semicolon there aren't errors in production when the scripts get concatenated. [Explanation](https://github.com/airbnb/javascript/issues/44#issuecomment-13063933)
-  - The file should be named with camelCase, live in a folder with the same name, and match the name of the single export.
-  - Add a method called `noConflict()` that sets the exported module to the previous version and returns this one.
-  - Always declare `'use strict';` at the top of the module.
+  - Modules should be built using the CommonJS pattern
 
     ```javascript
-    // fancyInput/fancyInput.js
+    // Creating a module in ./doSomething.js
+    module.exports = function doSomething() {
 
-    !function(global) {
-      'use strict';
-
-      var previousFancyInput = global.FancyInput;
-
-      function FancyInput(options) {
-        this.options = options || {};
-      }
-
-      FancyInput.noConflict = function noConflict() {
-        global.FancyInput = previousFancyInput;
-        return FancyInput;
-      };
-
-      global.FancyInput = FancyInput;
-    }(this);
+      console.log('BOO YA!');
+    };
     ```
+
+    ```javascript
+    // Consuming module from ./doSomething.js in another file
+    var doSomething = require('./doSomething');
+
+    doSomething();
+    ```
+  - Resuable modules should be distributed on NPM
 
 **[⬆ back to top](#table-of-contents)**
 
 
 ## jQuery
 
-  - Prefix jQuery object variables with a `$`.
-
-    ```javascript
-    // bad
-    var sidebar = $('.sidebar');
-
-    // good
-    var $sidebar = $('.sidebar');
-    ```
-
-  - Cache jQuery lookups.
-
-    ```javascript
-    // bad
-    function setSidebar() {
-      $('.sidebar').hide();
-
-      // ...stuff...
-
-      $('.sidebar').css({
-        'background-color': 'pink'
-      });
-    }
-
-    // good
-    function setSidebar() {
-      var $sidebar = $('.sidebar');
-      $sidebar.hide();
-
-      // ...stuff...
-
-      $sidebar.css({
-        'background-color': 'pink'
-      });
-    }
-    ```
-
-  - For DOM queries use Cascading `$('.sidebar ul')` or parent > child `$('.sidebar > ul')`. [jsPerf](http://jsperf.com/jquery-find-vs-context-sel/16)
-  - Use `find` with scoped jQuery object queries.
-
-    ```javascript
-    // bad
-    $('ul', '.sidebar').hide();
-
-    // bad
-    $('.sidebar').find('ul').hide();
-
-    // good
-    $('.sidebar ul').hide();
-
-    // good
-    $('.sidebar > ul').hide();
-
-    // good
-    $sidebar.find('ul').hide();
-    ```
-
-**[⬆ back to top](#table-of-contents)**
-
-
-## ECMAScript 5 Compatibility
-
-  - Refer to [Kangax](https://twitter.com/kangax/)'s ES5 [compatibility table](http://kangax.github.com/es5-compat-table/).
-
-**[⬆ back to top](#table-of-contents)**
-
-
-## Testing
-
-  - **Yup.**
-
-    ```javascript
-    function() {
-      return true;
-    }
-    ```
+  - You should shy away from using jQuery. Instead use modules off NPM like:
+    + `dom-select`
+    + `dom-style`
+    + `dom-tree`
+    + `dom-event`
+  - Visit [https://github.com/npm-dom](https://github.com/npm-dom) for more info.
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -1517,6 +1527,7 @@
   - [Basic JavaScript for the impatient programmer](http://www.2ality.com/2013/06/basic-javascript.html) - Dr. Axel Rauschmayer
   - [You Might Not Need jQuery](http://youmightnotneedjquery.com/) - Zack Bloom & Adam Schwartz
   - [ES6 Features](https://github.com/lukehoban/es6features) - Luke Hoban
+  - [Frontend Guidelines](https://github.com/bendc/frontend-guidelines) - Benjamin De Cock
 
 **Books**
 
