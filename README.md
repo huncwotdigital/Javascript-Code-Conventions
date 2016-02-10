@@ -1,4 +1,4 @@
-# Jam3 JavaScript Style Guide
+# Huncwot JavaScript Style Guide
 
 *Make It Happen and Don't Fuck It Up*
 
