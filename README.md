@@ -1,4 +1,4 @@
-# Huncwot JavaScript Style Guide
+# Huncwot JavaScript Style Guide() {
 
 (based on [Airbnb Style Guide](https://github.com/airbnb/javascript))
 
